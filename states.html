@@ -1,39 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gas Prices by State | National Gas Average</title>
-<style>
-  :root {
-    --bg: #05070d; --bg-2: #0b0f1a; --card: #10141f; --border: #1f2635;
-    --text: #f3f5f9; --text-dim: #8a93a6; --accent: #ffb020;
-    --green: #35d07f; --red: #ff5c5c; --blue: #4fb8ff;
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+// scripts/update-state-prices.js
+//
+// Fetches current retail gasoline prices for all 50 US states from
+// OilPriceAPI (https://www.oilpriceapi.com) and writes them to
+// states-data.json, which states.html reads at page-load time.
+//
+// Requires a free OilPriceAPI key: https://www.oilpriceapi.com/auth/signup
+// Store it as a GitHub Actions secret named OILPRICEAPI_KEY.
+//
+// IMPORTANT: the free tier allows 200 requests/month. This script makes
+// 50 requests per run (one per state), so it must run WEEKLY, not daily,
+// to stay within the free limit (50 x 4 = 200/month).
+
+const fs = require("fs");
+const path = require("path");
+
+const API_KEY = process.env.OILPRICEAPI_KEY;
+if (!API_KEY) {
+  console.error("Missing OILPRICEAPI_KEY environment variable. Set it as a GitHub secret.");
+  process.exit(1);
+}
+
+const STATES = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+  CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
+  HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
+  KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri",
+  MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
+  NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio",
+  OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
+  VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming"
+};
+
+const BASE_URL = "https://api.oilpriceapi.com/v1/prices/latest";
+
+async function fetchStatePrice(code) {
+  const url = `${BASE_URL}?by_code=GASOLINE_RETAIL_STATE_${code}_USD`;
+  const res = await fetch(url, {
+    headers: { Authorization: `Token ${API_KEY}` }
+  });
+  if (!res.ok) {
+    throw new Error(`Request failed for ${code}: ${res.status} ${res.statusText}`);
   }
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --bg: #eef1f6; --bg-2: #ffffff; --card: #ffffff; --border: #dbe0ea;
-      --text: #10141f; --text-dim: #5a6272;
+  const json = await res.json();
+  // OilPriceAPI's latest-price response shape: { data: { price, formatted, ... } }
+  const price = json?.data?.price ?? json?.data?.[0]?.price;
+  if (price == null) {
+    throw new Error(`No price found in response for ${code}: ${JSON.stringify(json)}`);
+  }
+  return Number(price);
+}
+
+async function main() {
+  const results = [];
+  const failed = [];
+
+  for (const [code, name] of Object.entries(STATES)) {
+    try {
+      console.log(`Fetching ${name} (${code})...`);
+      const price = await fetchStatePrice(code);
+      results.push({ code, name, price: Number(price.toFixed(3)) });
+    } catch (err) {
+      console.warn(`  -> failed: ${err.message}`);
+      failed.push(code);
     }
+    // Small delay between requests to be a good API citizen
+    await new Promise(r => setTimeout(r, 150));
   }
-  :root[data-theme="dark"] {
-    --bg: #05070d; --bg-2: #0b0f1a; --card: #10141f; --border: #1f2635;
-    --text: #f3f5f9; --text-dim: #8a93a6;
+
+  if (results.length === 0) {
+    console.error("No states fetched successfully. Aborting without overwriting states-data.json.");
+    process.exit(1);
   }
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-  header { padding: 24px 20px 16px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(255,176,32,0.08), transparent 60%); }
-  header .back { display: inline-block; margin-bottom: 10px; font-size: 12px; color: var(--blue); text-decoration: none; }
-  header h1 { font-size: clamp(20px, 5vw, 28px); margin: 0 0 6px; font-weight: 700; }
-  header .updated { font-size: 12px; color: var(--text-dim); }
+  const nationalAvg = results.reduce((sum, s) => sum + s.price, 0) / results.length;
 
-  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 50px; }
+  // Rank states, cheapest first
+  const ranked = [...results].sort((a, b) => a.price - b.price);
+  ranked.forEach((s, i) => { s.rank = i + 1; });
 
-  .search-wrap { margin-bottom: 18px; }
-  .search-row { display: flex; gap: 8px; }
+  const output = {
+    asOf: new Date().toISOString().slice(0, 10),
+    nationalAvg: Number(nationalAvg.toFixed(3)),
+    totalStates: results.length,
+    failedStates: failed,
+    states: results
+      .map(s => {
+        const diff = s.price - nationalAvg;
+        const pct = (diff / nationalAvg) * 100;
+        const rankEntry = ranked.find(r => r.code === s.code);
+        return {
+          code: s.code,
+          name: s.name,
+          price: s.price,
+          vsNational: Number(diff.toFixed(3)),
+          vsNationalPct: Number(pct.toFixed(1)),
+          rank: rankEntry.rank
+        };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name))
+  };
+
+  const outPath = path.join(__dirname, "..", "states-data.json");
+  fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
+  console.log(`Wrote ${outPath}`);
+  console.log(`Success: ${results.length}/50 states. Failed: ${failed.join(", ") || "none"}`);
+}
+
+main().catch(err => {
+  console.error(err);
+  process.exit(1);
+});
