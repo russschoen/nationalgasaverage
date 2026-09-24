@@ -1,0 +1,38 @@
+name: Update State Fuel Prices
+
+on:
+  schedule:
+    # Runs weekly on Mondays at 15:00 UTC (~11am ET), after EIA/AAA
+    # typically post fresh weekly numbers. 50 states x 4 weeks/month
+    # = 200 requests, which matches OilPriceAPI's free tier limit —
+    # do NOT change this to a daily schedule without upgrading your plan.
+    - cron: "0 15 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-state-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch state gas prices
+        env:
+          OILPRICEAPI_KEY: ${{ secrets.OILPRICEAPI_KEY }}
+        run: node scripts/update-state-prices.js
+
+      - name: Commit updated states-data.json
+        run: |
+          git config user.name "fuel-price-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add states-data.json
+          git diff --cached --quiet || git commit -m "Update state fuel prices $(date -u +'%Y-%m-%d')"
+          git push
