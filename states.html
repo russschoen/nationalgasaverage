@@ -1,114 +1,255 @@
-// scripts/update-state-prices.js
-//
-// Fetches current retail gasoline prices for all 50 US states from
-// OilPriceAPI (https://www.oilpriceapi.com) and writes them to
-// states-data.json, which states.html reads at page-load time.
-//
-// Requires a free OilPriceAPI key: https://www.oilpriceapi.com/auth/signup
-// Store it as a GitHub Actions secret named OILPRICEAPI_KEY.
-//
-// IMPORTANT: the free tier allows 200 requests/month. This script makes
-// 50 requests per run (one per state), so it must run WEEKLY, not daily,
-// to stay within the free limit (50 x 4 = 200/month).
-
-const fs = require("fs");
-const path = require("path");
-
-const API_KEY = process.env.OILPRICEAPI_KEY;
-if (!API_KEY) {
-  console.error("Missing OILPRICEAPI_KEY environment variable. Set it as a GitHub secret.");
-  process.exit(1);
-}
-
-const STATES = {
-  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
-  CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
-  HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
-  KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
-  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri",
-  MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
-  NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio",
-  OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
-  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
-  VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming"
-};
-
-const BASE_URL = "https://api.oilpriceapi.com/v1/prices/latest";
-
-async function fetchStatePrice(code) {
-  const url = `${BASE_URL}?by_code=GASOLINE_RETAIL_STATE_${code}_USD`;
-  const res = await fetch(url, {
-    headers: { Authorization: `Token ${API_KEY}` }
-  });
-  if (!res.ok) {
-    throw new Error(`Request failed for ${code}: ${res.status} ${res.statusText}`);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gas Prices by State | National Gas Average</title>
+<style>
+  :root {
+    --bg: #05070d; --bg-2: #0b0f1a; --card: #10141f; --border: #1f2635;
+    --text: #f3f5f9; --text-dim: #8a93a6; --accent: #ffb020;
+    --green: #35d07f; --red: #ff5c5c; --blue: #4fb8ff;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-  const json = await res.json();
-  // OilPriceAPI's latest-price response shape: { data: { price, formatted, ... } }
-  const price = json?.data?.price ?? json?.data?.[0]?.price;
-  if (price == null) {
-    throw new Error(`No price found in response for ${code}: ${JSON.stringify(json)}`);
-  }
-  return Number(price);
-}
-
-async function main() {
-  const results = [];
-  const failed = [];
-
-  for (const [code, name] of Object.entries(STATES)) {
-    try {
-      console.log(`Fetching ${name} (${code})...`);
-      const price = await fetchStatePrice(code);
-      results.push({ code, name, price: Number(price.toFixed(3)) });
-    } catch (err) {
-      console.warn(`  -> failed: ${err.message}`);
-      failed.push(code);
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #eef1f6; --bg-2: #ffffff; --card: #ffffff; --border: #dbe0ea;
+      --text: #10141f; --text-dim: #5a6272;
     }
-    // Small delay between requests to be a good API citizen
-    await new Promise(r => setTimeout(r, 150));
   }
-
-  if (results.length === 0) {
-    console.error("No states fetched successfully. Aborting without overwriting states-data.json.");
-    process.exit(1);
+  :root[data-theme="dark"] {
+    --bg: #05070d; --bg-2: #0b0f1a; --card: #10141f; --border: #1f2635;
+    --text: #f3f5f9; --text-dim: #8a93a6;
   }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-  const nationalAvg = results.reduce((sum, s) => sum + s.price, 0) / results.length;
+  header { padding: 24px 20px 16px; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(255,176,32,0.08), transparent 60%); }
+  header .back { display: inline-block; margin-bottom: 10px; font-size: 12px; color: var(--blue); text-decoration: none; }
+  header h1 { font-size: clamp(20px, 5vw, 28px); margin: 0 0 6px; font-weight: 700; }
+  header .updated { font-size: 12px; color: var(--text-dim); }
 
-  // Rank states, cheapest first
-  const ranked = [...results].sort((a, b) => a.price - b.price);
-  ranked.forEach((s, i) => { s.rank = i + 1; });
+  main { max-width: 760px; margin: 0 auto; padding: 20px 16px 50px; }
 
-  const output = {
-    asOf: new Date().toISOString().slice(0, 10),
-    nationalAvg: Number(nationalAvg.toFixed(3)),
-    totalStates: results.length,
-    failedStates: failed,
-    states: results
-      .map(s => {
-        const diff = s.price - nationalAvg;
-        const pct = (diff / nationalAvg) * 100;
-        const rankEntry = ranked.find(r => r.code === s.code);
-        return {
-          code: s.code,
-          name: s.name,
-          price: s.price,
-          vsNational: Number(diff.toFixed(3)),
-          vsNationalPct: Number(pct.toFixed(1)),
-          rank: rankEntry.rank
-        };
-      })
-      .sort((a, b) => a.name.localeCompare(b.name))
-  };
+  .search-wrap { margin-bottom: 18px; }
+  .search-row { display: flex; gap: 8px; }
+  .search-input {
+    flex: 1; background: var(--card); border: 1px solid var(--border); color: var(--text);
+    border-radius: 10px; padding: 12px 14px; font-size: 16px; text-transform: uppercase;
+  }
+  .search-input::placeholder { color: var(--text-dim); text-transform: none; }
+  .search-btn {
+    background: var(--accent); color: #1a1200; border: none; border-radius: 10px;
+    padding: 0 18px; font-weight: 700; font-size: 14px; cursor: pointer;
+  }
+  .search-hint { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
 
-  const outPath = path.join(__dirname, "..", "states-data.json");
-  fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
-  console.log(`Wrote ${outPath}`);
-  console.log(`Success: ${results.length}/50 states. Failed: ${failed.join(", ") || "none"}`);
+  .national-card {
+    background: linear-gradient(180deg, var(--card), var(--bg-2));
+    border: 1px solid var(--border); border-radius: 16px; padding: 18px; text-align: center; margin-bottom: 20px;
+  }
+  .national-card .tag { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+  .national-card .big { font-size: clamp(30px, 8vw, 40px); font-weight: 800; color: var(--accent); }
+
+  .baseline-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .baseline-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px; text-align: center;
+  }
+  .baseline-card .tag { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 6px; }
+  .baseline-card .val { font-size: 22px; font-weight: 800; }
+  .baseline-card .sub { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+  .baseline-card.now .val { color: var(--accent); }
+  .baseline-card.then .val { color: var(--text-dim); }
+  .baseline-change {
+    grid-column: 1 / -1;
+    text-align: center;
+    background: rgba(255,92,92,0.08);
+    border: 1px solid rgba(255,92,92,0.3);
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .baseline-change strong { color: var(--red); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  thead th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-dim);
+    padding: 10px 12px; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
+  thead th:hover { color: var(--text); }
+  tbody td { padding: 10px 12px; font-size: 14px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  tbody tr.highlighted { background: rgba(255,176,32,0.14); }
+  .state-name { font-weight: 600; }
+  .state-code { color: var(--text-dim); font-size: 12px; margin-left: 4px; }
+  .price-cell { font-weight: 700; }
+  .diff-up { color: var(--red); }
+  .diff-down { color: var(--green); }
+  .diff-flat { color: var(--text-dim); }
+  .rank-badge { display: inline-block; min-width: 24px; text-align: center; font-size: 12px; color: var(--text-dim); }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 14px; }
+
+  footer { text-align: center; padding: 18px; font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--border); margin-top: 20px; }
+  footer a { color: var(--blue); text-decoration: none; }
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="./index.html">&larr; Back to national average</a>
+  <h1>⛽ Gas Prices by State</h1>
+  <p class="updated" id="updatedLine">Loading...</p>
+</header>
+
+<main>
+  <div class="search-wrap">
+    <div class="search-row">
+      <input class="search-input" id="stateSearch" maxlength="2" placeholder="Type state abbreviation (e.g. CA)">
+      <button class="search-btn" id="searchBtn">Go</button>
+    </div>
+    <p class="search-hint">Or click any state in the table below. Click a column header to sort.</p>
+  </div>
+
+  <div class="national-card">
+    <div class="tag">50-State Average (calculated from table below)</div>
+    <div class="big" id="nationalAvg">--</div>
+  </div>
+
+  <div class="baseline-row">
+    <div class="baseline-card now">
+      <div class="tag">National avg today</div>
+      <div class="val" id="baselineNow">--</div>
+      <div class="sub" id="baselineNowDate">--</div>
+    </div>
+    <div class="baseline-card then">
+      <div class="tag">National avg then</div>
+      <div class="val">$3.113</div>
+      <div class="sub">Jan 20, 2025 (Inauguration Day)</div>
+    </div>
+    <div class="baseline-change" id="baselineChange">--</div>
+  </div>
+
+  <div id="tableWrap">
+    <table id="statesTable">
+      <thead>
+        <tr>
+          <th data-sort="name">State</th>
+          <th data-sort="price">Price</th>
+          <th data-sort="vsNationalPct">vs. Avg</th>
+          <th data-sort="rank">Rank</th>
+        </tr>
+      </thead>
+      <tbody id="statesBody"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  Data sourced from OilPriceAPI, updated weekly. Not affiliated with any government agency.
+  <br><a href="./index.html">National Gas Average</a> · Home
+</footer>
+
+<script>
+let allStates = [];
+let sortKey = "name";
+let sortDir = 1;
+
+function fmt(n) { return "$" + n.toFixed(3); }
+
+function diffLabel(pct) {
+  if (pct > 0.5) return { cls: "diff-up", txt: "+" + pct.toFixed(1) + "%" };
+  if (pct < -0.5) return { cls: "diff-down", txt: pct.toFixed(1) + "%" };
+  return { cls: "diff-flat", txt: "avg" };
 }
 
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+function renderTable() {
+  const tbody = document.getElementById("statesBody");
+  const sorted = [...allStates].sort((a, b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    if (typeof av === "string") return av.localeCompare(bv) * sortDir;
+    return (av - bv) * sortDir;
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const highlightCode = (params.get("state") || "").toUpperCase();
+
+  tbody.innerHTML = sorted.map(s => {
+    const d = diffLabel(s.vsNationalPct);
+    const isHi = s.code === highlightCode;
+    return `<tr class="${isHi ? 'highlighted' : ''}" id="state-${s.code}">
+      <td><span class="state-name">${s.name}</span><span class="state-code">${s.code}</span></td>
+      <td class="price-cell">${fmt(s.price)}</td>
+      <td class="${d.cls}">${d.txt}</td>
+      <td><span class="rank-badge">#${s.rank}</span></td>
+    </tr>`;
+  }).join("");
+
+  if (highlightCode) {
+    const row = document.getElementById("state-" + highlightCode);
+    if (row) setTimeout(() => row.scrollIntoView({ behavior: "smooth", block: "center" }), 200);
+  }
+}
+
+async function init() {
+  let data;
+  try {
+    const res = await fetch("./states-data.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("not found");
+    data = await res.json();
+  } catch (err) {
+    document.getElementById("tableWrap").innerHTML =
+      '<div class="empty-state">State data hasn\'t loaded yet. The weekly update may not have run for the first time. Check back soon.</div>';
+    document.getElementById("updatedLine").textContent = "No data yet";
+    return;
+  }
+
+  allStates = data.states || [];
+  document.getElementById("updatedLine").textContent = "Updated weekly · Last updated " + data.asOf;
+  document.getElementById("nationalAvg").textContent = fmt(data.nationalAvg);
+
+  // Inauguration Day baseline comparison (national figure, not per-state)
+  const JAN20_BASELINE = 3.113;
+  const baseDollarChange = data.nationalAvg - JAN20_BASELINE;
+  const basePctChange = (baseDollarChange / JAN20_BASELINE) * 100;
+  document.getElementById("baselineNow").textContent = fmt(data.nationalAvg);
+  document.getElementById("baselineNowDate").textContent = data.asOf;
+  document.getElementById("baselineChange").innerHTML =
+    `Since Inauguration Day: <strong>+${fmt(baseDollarChange)}</strong> (<strong>+${basePctChange.toFixed(1)}%</strong>) — this is a national comparison, not state-specific`;
+
+  renderTable();
+
+  document.querySelectorAll("th[data-sort]").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.getAttribute("data-sort");
+      if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+      renderTable();
+    });
+  });
+
+  function goToState() {
+    const val = document.getElementById("stateSearch").value.trim().toUpperCase();
+    if (val.length === 2) {
+      window.location.search = "?state=" + val;
+    }
+  }
+  document.getElementById("searchBtn").addEventListener("click", goToState);
+  document.getElementById("stateSearch").addEventListener("keydown", e => {
+    if (e.key === "Enter") goToState();
+  });
+}
+
+// Theme sync with homepage (per-viewer, local only)
+try {
+  const saved = localStorage.getItem("fuel-ticker-theme");
+  if (saved) document.documentElement.setAttribute("data-theme", saved);
+} catch (e) {}
+
+init();
+</script>
+</body>
+</html>
