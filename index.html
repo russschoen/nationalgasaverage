@@ -540,7 +540,7 @@ async function init() {
 
 function render(data) {
 
-  function fmt(n) { return "$" + n.toFixed(3); }
+  function fmt(n) { return "$" + n.toFixed(2); }
   function deltaText(d) {
     if (d > 0) return { cls: "up", txt: "▲ " + fmt(Math.abs(d)) };
     if (d < 0) return { cls: "down", txt: "▼ " + fmt(Math.abs(d)) };
