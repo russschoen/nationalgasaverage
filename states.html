@@ -128,7 +128,7 @@
     </div>
     <div class="baseline-card then">
       <div class="tag">National avg then</div>
-      <div class="val">$3.113</div>
+      <div class="val">$3.11</div>
       <div class="sub">Jan 20, 2025 (Inauguration Day)</div>
     </div>
     <div class="baseline-change" id="baselineChange">--</div>
@@ -160,7 +160,7 @@ let sortKey = "name";
 let sortDir = 1;
 const JAN20_BASELINE = 3.113; // National avg on Jan 20, 2025 (Inauguration Day)
 
-function fmt(n) { return "$" + n.toFixed(3); }
+function fmt(n) { return "$" + n.toFixed(2); }
 
 function diffLabel(pct) {
   if (pct > 0.5) return { cls: "diff-up", txt: "+" + pct.toFixed(1) + "%" };
