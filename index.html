@@ -94,7 +94,9 @@
     width: max-content;
     animation: scroll-left 32s linear infinite;
   }
-  .ticker-track:hover { animation-play-state: paused; }
+  @media (hover: hover) {
+    .ticker-track:hover { animation-play-state: paused; }
+  }
   @keyframes scroll-left {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
