@@ -140,7 +140,7 @@
         <tr>
           <th data-sort="name">State</th>
           <th data-sort="price">Price</th>
-          <th data-sort="vsNationalPct">vs. Avg</th>
+          <th data-sort="vsBaselinePct">vs. Jan '25</th>
           <th data-sort="rank">Rank</th>
         </tr>
       </thead>
@@ -158,6 +158,7 @@
 let allStates = [];
 let sortKey = "name";
 let sortDir = 1;
+const JAN20_BASELINE = 3.113; // National avg on Jan 20, 2025 (Inauguration Day)
 
 function fmt(n) { return "$" + n.toFixed(3); }
 
@@ -169,6 +170,13 @@ function diffLabel(pct) {
 
 function renderTable() {
   const tbody = document.getElementById("statesBody");
+
+  // Compute each state's % change vs the Jan 20, 2025 national baseline
+  // (fixed number), not vs today's 50-state average.
+  allStates.forEach(s => {
+    s.vsBaselinePct = ((s.price - JAN20_BASELINE) / JAN20_BASELINE) * 100;
+  });
+
   const sorted = [...allStates].sort((a, b) => {
     const av = a[sortKey], bv = b[sortKey];
     if (typeof av === "string") return av.localeCompare(bv) * sortDir;
@@ -179,7 +187,7 @@ function renderTable() {
   const highlightCode = (params.get("state") || "").toUpperCase();
 
   tbody.innerHTML = sorted.map(s => {
-    const d = diffLabel(s.vsNationalPct);
+    const d = diffLabel(s.vsBaselinePct);
     const isHi = s.code === highlightCode;
     return `<tr class="${isHi ? 'highlighted' : ''}" id="state-${s.code}">
       <td><span class="state-name">${s.name}</span><span class="state-code">${s.code}</span></td>
@@ -213,7 +221,6 @@ async function init() {
   document.getElementById("nationalAvg").textContent = fmt(data.nationalAvg);
 
   // Inauguration Day baseline comparison (national figure, not per-state)
-  const JAN20_BASELINE = 3.113;
   const baseDollarChange = data.nationalAvg - JAN20_BASELINE;
   const basePctChange = (baseDollarChange / JAN20_BASELINE) * 100;
   document.getElementById("baselineNow").textContent = fmt(data.nationalAvg);
