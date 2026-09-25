@@ -362,6 +362,33 @@
     text-decoration: none;
   }
 
+  .donate-wrap {
+    text-align: center;
+    padding: 8px 18px 28px;
+  }
+  .donate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #3D95CE;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: opacity 0.15s ease;
+  }
+  .donate-btn:hover { opacity: 0.88; }
+  .donate-note {
+    margin: 10px auto 0;
+    max-width: 420px;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
   .methodology {
     max-width: 640px;
     margin: 18px auto 0;
@@ -452,6 +479,17 @@
       </div>
       <a class="state-browse-link" href="./states.html">Browse all 50 states &rarr;</a>
     </div>
+  </div>
+
+  <div class="donate-wrap">
+    <a class="donate-btn"
+       href="https://venmo.com/russschoen?txn=pay&amount=1&note=Supporting%20this%20site%20%2B%20our%20ever-rising%20health%20insurance%20premiums%20%F0%9F%92%99"
+       target="_blank" rel="noopener">
+      💙 Donate $1 via Venmo
+    </a>
+    <p class="donate-note">
+      This site is free to use and run by one person. If it's useful to you, a $1 donation helps cover the cost of running it — and our ever-rising health insurance premiums. Genuinely appreciated, never required.
+    </p>
   </div>
 
   <footer>
