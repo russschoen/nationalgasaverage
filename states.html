@@ -141,7 +141,7 @@
           <th data-sort="name">State</th>
           <th data-sort="price">Price</th>
           <th data-sort="vsBaselinePct">vs. Jan '25</th>
-          <th data-sort="rank">Rank</th>
+          <th data-sort="rank">Rank ↑</th>
         </tr>
       </thead>
       <tbody id="statesBody"></tbody>
@@ -176,6 +176,12 @@ function renderTable() {
   allStates.forEach(s => {
     s.vsBaselinePct = ((s.price - JAN20_BASELINE) / JAN20_BASELINE) * 100;
   });
+
+  // Rank states by biggest increase since Jan 20, 2025 first (#1 = biggest
+  // increase), overriding whatever rank came from the data file (which
+  // ranked by raw price instead).
+  const byIncrease = [...allStates].sort((a, b) => b.vsBaselinePct - a.vsBaselinePct);
+  byIncrease.forEach((s, i) => { s.rank = i + 1; });
 
   const sorted = [...allStates].sort((a, b) => {
     const av = a[sortKey], bv = b[sortKey];
