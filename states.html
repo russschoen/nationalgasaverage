@@ -116,7 +116,7 @@
   </div>
 
   <div class="national-card">
-    <div class="tag">50-State Average (calculated from table below)</div>
+    <div class="tag">National Average (same as homepage)</div>
     <div class="big" id="nationalAvg">--</div>
   </div>
 
@@ -224,12 +224,28 @@ async function init() {
 
   allStates = data.states || [];
   document.getElementById("updatedLine").textContent = "Updated weekly · Last updated " + data.asOf;
-  document.getElementById("nationalAvg").textContent = fmt(data.nationalAvg);
+
+  // Use the SAME national average shown on the homepage (from the EIA-based
+  // data.json), rather than a separately calculated 50-state average, so
+  // the two pages always agree with each other.
+  let displayAvg = data.nationalAvg; // fallback if data.json can't be loaded
+  try {
+    const homeRes = await fetch("./data.json", { cache: "no-store" });
+    if (homeRes.ok) {
+      const homeData = await homeRes.json();
+      const regular = homeData.grades.find(g => g.key === "regular");
+      if (regular) displayAvg = regular.price;
+    }
+  } catch (err) {
+    console.warn("Could not load homepage data.json, falling back to calculated 50-state average.", err);
+  }
+
+  document.getElementById("nationalAvg").textContent = fmt(displayAvg);
 
   // Inauguration Day baseline comparison (national figure, not per-state)
-  const baseDollarChange = data.nationalAvg - JAN20_BASELINE;
+  const baseDollarChange = displayAvg - JAN20_BASELINE;
   const basePctChange = (baseDollarChange / JAN20_BASELINE) * 100;
-  document.getElementById("baselineNow").textContent = fmt(data.nationalAvg);
+  document.getElementById("baselineNow").textContent = fmt(displayAvg);
   document.getElementById("baselineNowDate").textContent = data.asOf;
   document.getElementById("baselineChange").innerHTML =
     `Since Inauguration Day: <strong>+${fmt(baseDollarChange)}</strong> (<strong>+${basePctChange.toFixed(1)}%</strong>) — this is a national comparison, not state-specific`;
