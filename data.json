@@ -1,42 +1,42 @@
 {
-  "asOf": "2026-10-06",
+  "asOf": "2026-10-07",
   "baselineLabel": "Jan 20, 2025 (Inauguration Day)",
   "grades": [
     {
       "key": "regular",
       "label": "Regular",
       "color": "#ffb020",
-      "price": 4.465,
-      "change": -0.013,
+      "price": 4.354,
+      "change": -0.111,
       "yearAgo": 3.113,
-      "period": "2026-09-28"
+      "period": "2026-10-05"
     },
     {
       "key": "midgrade",
       "label": "Mid-Grade",
       "color": "#ff8a4c",
-      "price": 5.073,
-      "change": 0.012,
+      "price": 4.99,
+      "change": -0.083,
       "yearAgo": 3.543,
-      "period": "2026-09-28"
+      "period": "2026-10-05"
     },
     {
       "key": "premium",
       "label": "Premium",
       "color": "#ff5c8a",
-      "price": 5.482,
-      "change": 0.022,
+      "price": 5.4,
+      "change": -0.082,
       "yearAgo": 3.897,
-      "period": "2026-09-28"
+      "period": "2026-10-05"
     },
     {
       "key": "diesel",
       "label": "Diesel",
       "color": "#4fb8ff",
-      "price": 6.382,
-      "change": -0.147,
+      "price": 6.199,
+      "change": -0.183,
       "yearAgo": 3.551,
-      "period": "2026-09-28"
+      "period": "2026-10-05"
     }
   ]
 }
