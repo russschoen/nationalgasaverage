@@ -150,7 +150,7 @@
 </main>
 
 <footer>
-  Data sourced from OilPriceAPI, updated weekly. Not affiliated with any government agency.
+  State prices sourced from AAA's public state averages, updated daily. The national average at the top matches the homepage. Not affiliated with AAA or any government agency.
   <br><a href="./">National Gas Average</a> · Home
 </footer>
 
@@ -217,13 +217,13 @@ async function init() {
     data = await res.json();
   } catch (err) {
     document.getElementById("tableWrap").innerHTML =
-      '<div class="empty-state">State data hasn\'t loaded yet. The weekly update may not have run for the first time. Check back soon.</div>';
+      '<div class="empty-state">State data hasn\'t loaded yet. The daily update may not have run yet. Check back soon.</div>';
     document.getElementById("updatedLine").textContent = "No data yet";
     return;
   }
 
   allStates = data.states || [];
-  document.getElementById("updatedLine").textContent = "Updated weekly · Last updated " + data.asOf;
+  document.getElementById("updatedLine").textContent = "State prices updated daily · Last updated " + data.asOf;
 
   // Use the SAME national average shown on the homepage (from the EIA-based
   // data.json), rather than a separately calculated 50-state average, so
