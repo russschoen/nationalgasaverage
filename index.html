@@ -461,12 +461,12 @@
     <div class="grid" id="cardGrid"></div>
 
     <div class="diesel-callout">
-      <strong>Diesel note:</strong> diesel prices set a series of all-time records in early September 2026, briefly topping <strong>$6.00/gal</strong> nationally before easing slightly. Diesel typically moves independently of gasoline since it's driven more by freight demand, refinery output mix, and global distillate markets than by consumer driving patterns.
+      <strong>Diesel note:</strong> diesel prices set a series of all-time records in early September 2026, topping <strong>$6.50/gal</strong> nationally (AAA's record is $6.53, set Sept. 22, 2026). Prices have since eased somewhat. Diesel typically moves independently of gasoline since it's driven more by freight demand, refinery output mix, and global distillate markets than by consumer driving patterns.
     </div>
 
     <section class="yoy-section">
       <h2 class="yoy-title">Up Since Inauguration Day 2025</h2>
-      <p class="yoy-sub">Comparing today's snapshot to the AAA national average on January 20, 2025</p>
+      <p class="yoy-sub">Comparing today's AAA national average to the AAA national average on January 20, 2025</p>
       <div class="yoy-grid" id="yoyGrid"></div>
     </section>
   </main>
@@ -494,19 +494,19 @@
   </div>
 
   <footer>
-    Snapshot data sourced from AAA Daily Fuel Gauge reporting. This page shows a periodic snapshot, not a live feed — prices change daily.
+    Prices are AAA's daily national averages, refreshed once a day. This is not a live feed.
     <br>For real-time prices, visit <a href="https://gasprices.aaa.com" target="_blank" rel="noopener">gasprices.aaa.com</a>.
 
     <div class="methodology">
       <strong>Sourcing &amp; methodology</strong>
       <p>
-        Current prices (Regular, Mid-Grade, Premium, Diesel) are fetched daily from the U.S. Energy Information Administration's public API and reflect the national average from EIA's weekly retail gasoline and diesel price survey. The Jan 20, 2025 comparison figures are drawn from AAA's published weekly national averages closest to that date &mdash; Regular gas is interpolated between AAA's Jan 16, 2025 ($3.10) and Jan 23, 2025 ($3.13) reports; Mid-Grade, Premium, and Diesel use AAA's Jan 11, 2025 report ($3.543 / $3.897 / $3.551) as the nearest available reading, since AAA does not publish a reading for every individual date.
+        Current prices (Regular, Mid-Grade, Premium, Diesel) are AAA's published daily national averages, collected once a day; the change shown on each card is versus AAA's "yesterday" figure. The Jan 20, 2025 comparison figures are also from AAA, drawn from its published weekly national averages closest to that date &mdash; Regular gas is interpolated between AAA's Jan 16, 2025 ($3.10) and Jan 23, 2025 ($3.13) reports; Mid-Grade, Premium, and Diesel use AAA's Jan 11, 2025 report ($3.543 / $3.897 / $3.551) as the nearest available reading, since AAA does not publish a reading for every individual date.
       </p>
       <p>
         This is a price comparison only. Fuel prices are affected by many overlapping factors &mdash; global crude oil markets, refinery capacity and outages, seasonal demand, regional taxes, and geopolitical events (including 2026's disruption to diesel markets) &mdash; and this page does not attribute the change to any single cause.
       </p>
       <p>
-        This page updates automatically once a day via a scheduled job that pulls fresh numbers from the EIA and rewrites this page's data file. If you're seeing an older date, the daily job may not have run yet or may need to be reconfigured.
+        This page updates automatically once a day via a scheduled job that pulls fresh numbers from AAA's public gas prices page and rewrites this page's data file. If you're seeing an older date, the daily job may not have run yet or may need to be reconfigured.
       </p>
     </div>
   </footer>
@@ -573,7 +573,7 @@ function render(data) {
     card.innerHTML = `
       <div class="grade">${g.label}</div>
       <div class="price">${fmt(g.price)}</div>
-      <div class="change ${d.cls}">${d.txt} vs. prior snapshot</div>
+      <div class="change ${d.cls}">${d.txt} vs. yesterday</div>
     `;
     grid.appendChild(card);
   });
