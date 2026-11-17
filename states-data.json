@@ -1,408 +1,408 @@
 {
-  "asOf": "2026-11-16",
+  "asOf": "2026-11-17",
   "source": "AAA state gas price averages (regular unleaded)",
-  "nationalAvg": 3.8539,
+  "nationalAvg": 3.832,
   "totalStates": 50,
   "failedStates": [],
   "states": [
     {
       "code": "AL",
       "name": "Alabama",
-      "price": 3.464,
-      "vsNational": -0.3899,
-      "vsNationalPct": -10.1,
-      "rank": 10
+      "price": 3.4477,
+      "vsNational": -0.3843,
+      "vsNationalPct": -10,
+      "rank": 11
     },
     {
       "code": "AK",
       "name": "Alaska",
-      "price": 4.4338,
-      "vsNational": 0.5799,
-      "vsNationalPct": 15,
+      "price": 4.4116,
+      "vsNational": 0.5796,
+      "vsNationalPct": 15.1,
       "rank": 45
     },
     {
       "code": "AZ",
       "name": "Arizona",
-      "price": 4.0501,
-      "vsNational": 0.1962,
-      "vsNationalPct": 5.1,
+      "price": 4.0239,
+      "vsNational": 0.1919,
+      "vsNationalPct": 5,
       "rank": 38
     },
     {
       "code": "AR",
       "name": "Arkansas",
-      "price": 3.4719,
-      "vsNational": -0.382,
-      "vsNationalPct": -9.9,
-      "rank": 11
+      "price": 3.4449,
+      "vsNational": -0.3871,
+      "vsNationalPct": -10.1,
+      "rank": 10
     },
     {
       "code": "CA",
       "name": "California",
-      "price": 5.5663,
-      "vsNational": 1.7124,
-      "vsNationalPct": 44.4,
+      "price": 5.5438,
+      "vsNational": 1.7118,
+      "vsNationalPct": 44.7,
       "rank": 49
     },
     {
       "code": "CO",
       "name": "Colorado",
-      "price": 3.6077,
-      "vsNational": -0.2462,
-      "vsNationalPct": -6.4,
-      "rank": 18
+      "price": 3.6605,
+      "vsNational": -0.1715,
+      "vsNationalPct": -4.5,
+      "rank": 23
     },
     {
       "code": "CT",
       "name": "Connecticut",
-      "price": 4.013,
-      "vsNational": 0.1591,
-      "vsNationalPct": 4.1,
-      "rank": 36
+      "price": 3.998,
+      "vsNational": 0.166,
+      "vsNationalPct": 4.3,
+      "rank": 37
     },
     {
       "code": "DE",
       "name": "Delaware",
-      "price": 3.7634,
-      "vsNational": -0.0905,
-      "vsNationalPct": -2.3,
-      "rank": 27
+      "price": 3.7554,
+      "vsNational": -0.0766,
+      "vsNationalPct": -2,
+      "rank": 28
     },
     {
       "code": "FL",
       "name": "Florida",
-      "price": 3.5985,
-      "vsNational": -0.2554,
-      "vsNationalPct": -6.6,
-      "rank": 17
+      "price": 3.563,
+      "vsNational": -0.269,
+      "vsNationalPct": -7,
+      "rank": 16
     },
     {
       "code": "GA",
       "name": "Georgia",
-      "price": 3.325,
-      "vsNational": -0.5289,
-      "vsNationalPct": -13.7,
+      "price": 3.3047,
+      "vsNational": -0.5273,
+      "vsNationalPct": -13.8,
       "rank": 4
     },
     {
       "code": "HI",
       "name": "Hawaii",
-      "price": 5.6163,
-      "vsNational": 1.7624,
-      "vsNationalPct": 45.7,
+      "price": 5.5967,
+      "vsNational": 1.7647,
+      "vsNationalPct": 46.1,
       "rank": 50
     },
     {
       "code": "ID",
       "name": "Idaho",
-      "price": 4.0767,
-      "vsNational": 0.2228,
-      "vsNationalPct": 5.8,
+      "price": 4.0513,
+      "vsNational": 0.2193,
+      "vsNationalPct": 5.7,
       "rank": 40
     },
     {
       "code": "IL",
       "name": "Illinois",
-      "price": 4.1749,
-      "vsNational": 0.321,
-      "vsNationalPct": 8.3,
+      "price": 4.1193,
+      "vsNational": 0.2873,
+      "vsNationalPct": 7.5,
       "rank": 43
     },
     {
       "code": "IN",
       "name": "Indiana",
-      "price": 3.3191,
-      "vsNational": -0.5348,
-      "vsNationalPct": -13.9,
+      "price": 3.2747,
+      "vsNational": -0.5573,
+      "vsNationalPct": -14.5,
       "rank": 3
     },
     {
       "code": "IA",
       "name": "Iowa",
-      "price": 3.6313,
-      "vsNational": -0.2226,
-      "vsNationalPct": -5.8,
+      "price": 3.5966,
+      "vsNational": -0.2354,
+      "vsNationalPct": -6.1,
       "rank": 19
     },
     {
       "code": "KS",
       "name": "Kansas",
-      "price": 3.5671,
-      "vsNational": -0.2868,
+      "price": 3.5502,
+      "vsNational": -0.2818,
       "vsNationalPct": -7.4,
       "rank": 15
     },
     {
       "code": "KY",
       "name": "Kentucky",
-      "price": 3.5666,
-      "vsNational": -0.2873,
-      "vsNationalPct": -7.5,
+      "price": 3.5308,
+      "vsNational": -0.3012,
+      "vsNationalPct": -7.9,
       "rank": 14
     },
     {
       "code": "LA",
       "name": "Louisiana",
-      "price": 3.4124,
-      "vsNational": -0.4415,
+      "price": 3.3923,
+      "vsNational": -0.4397,
       "vsNationalPct": -11.5,
-      "rank": 7
+      "rank": 8
     },
     {
       "code": "ME",
       "name": "Maine",
-      "price": 4.0164,
-      "vsNational": 0.1625,
-      "vsNationalPct": 4.2,
-      "rank": 37
+      "price": 3.9958,
+      "vsNational": 0.1638,
+      "vsNationalPct": 4.3,
+      "rank": 36
     },
     {
       "code": "MD",
       "name": "Maryland",
-      "price": 3.7859,
-      "vsNational": -0.068,
-      "vsNationalPct": -1.8,
-      "rank": 28
+      "price": 3.7747,
+      "vsNational": -0.0573,
+      "vsNationalPct": -1.5,
+      "rank": 29
     },
     {
       "code": "MA",
       "name": "Massachusetts",
-      "price": 3.9515,
-      "vsNational": 0.0976,
-      "vsNationalPct": 2.5,
+      "price": 3.9321,
+      "vsNational": 0.1001,
+      "vsNationalPct": 2.6,
       "rank": 34
     },
     {
       "code": "MI",
       "name": "Michigan",
-      "price": 3.7875,
-      "vsNational": -0.0664,
-      "vsNationalPct": -1.7,
-      "rank": 29
+      "price": 3.7459,
+      "vsNational": -0.0861,
+      "vsNationalPct": -2.2,
+      "rank": 27
     },
     {
       "code": "MN",
       "name": "Minnesota",
-      "price": 3.6859,
-      "vsNational": -0.168,
-      "vsNationalPct": -4.4,
-      "rank": 23
+      "price": 3.652,
+      "vsNational": -0.18,
+      "vsNationalPct": -4.7,
+      "rank": 21
     },
     {
       "code": "MS",
       "name": "Mississippi",
-      "price": 3.5195,
-      "vsNational": -0.3344,
-      "vsNationalPct": -8.7,
+      "price": 3.5088,
+      "vsNational": -0.3232,
+      "vsNationalPct": -8.4,
       "rank": 13
     },
     {
       "code": "MO",
       "name": "Missouri",
-      "price": 3.5073,
-      "vsNational": -0.3466,
-      "vsNationalPct": -9,
+      "price": 3.4807,
+      "vsNational": -0.3513,
+      "vsNationalPct": -9.2,
       "rank": 12
     },
     {
       "code": "MT",
       "name": "Montana",
-      "price": 3.6403,
-      "vsNational": -0.2136,
+      "price": 3.6212,
+      "vsNational": -0.2108,
       "vsNationalPct": -5.5,
-      "rank": 21
+      "rank": 20
     },
     {
       "code": "NE",
       "name": "Nebraska",
-      "price": 3.7067,
-      "vsNational": -0.1472,
-      "vsNationalPct": -3.8,
-      "rank": 25
+      "price": 3.7078,
+      "vsNational": -0.1242,
+      "vsNationalPct": -3.2,
+      "rank": 26
     },
     {
       "code": "NV",
       "name": "Nevada",
-      "price": 4.8968,
-      "vsNational": 1.0429,
-      "vsNationalPct": 27.1,
+      "price": 4.8785,
+      "vsNational": 1.0465,
+      "vsNationalPct": 27.3,
       "rank": 48
     },
     {
       "code": "NH",
       "name": "New Hampshire",
-      "price": 3.959,
-      "vsNational": 0.1051,
-      "vsNationalPct": 2.7,
+      "price": 3.9417,
+      "vsNational": 0.1097,
+      "vsNationalPct": 2.9,
       "rank": 35
     },
     {
       "code": "NJ",
       "name": "New Jersey",
-      "price": 3.9392,
-      "vsNational": 0.0853,
+      "price": 3.918,
+      "vsNational": 0.086,
       "vsNationalPct": 2.2,
       "rank": 33
     },
     {
       "code": "NM",
       "name": "New Mexico",
-      "price": 3.5908,
-      "vsNational": -0.2631,
-      "vsNationalPct": -6.8,
-      "rank": 16
+      "price": 3.5904,
+      "vsNational": -0.2416,
+      "vsNationalPct": -6.3,
+      "rank": 18
     },
     {
       "code": "NY",
       "name": "New York",
-      "price": 4.1347,
-      "vsNational": 0.2808,
-      "vsNationalPct": 7.3,
+      "price": 4.1173,
+      "vsNational": 0.2853,
+      "vsNationalPct": 7.4,
       "rank": 42
     },
     {
       "code": "NC",
       "name": "North Carolina",
-      "price": 3.0921,
-      "vsNational": -0.7618,
-      "vsNationalPct": -19.8,
+      "price": 3.085,
+      "vsNational": -0.747,
+      "vsNationalPct": -19.5,
       "rank": 1
     },
     {
       "code": "ND",
       "name": "North Dakota",
-      "price": 3.6882,
-      "vsNational": -0.1657,
-      "vsNationalPct": -4.3,
-      "rank": 24
+      "price": 3.6578,
+      "vsNational": -0.1742,
+      "vsNationalPct": -4.5,
+      "rank": 22
     },
     {
       "code": "OH",
       "name": "Ohio",
-      "price": 3.4457,
-      "vsNational": -0.4082,
-      "vsNationalPct": -10.6,
-      "rank": 9
+      "price": 3.3845,
+      "vsNational": -0.4475,
+      "vsNationalPct": -11.7,
+      "rank": 7
     },
     {
       "code": "OK",
       "name": "Oklahoma",
-      "price": 3.3263,
-      "vsNational": -0.5276,
-      "vsNationalPct": -13.7,
+      "price": 3.3113,
+      "vsNational": -0.5207,
+      "vsNationalPct": -13.6,
       "rank": 5
     },
     {
       "code": "OR",
       "name": "Oregon",
-      "price": 4.4565,
-      "vsNational": 0.6026,
-      "vsNationalPct": 15.6,
+      "price": 4.4269,
+      "vsNational": 0.5949,
+      "vsNationalPct": 15.5,
       "rank": 46
     },
     {
       "code": "PA",
       "name": "Pennsylvania",
-      "price": 4.2223,
-      "vsNational": 0.3684,
+      "price": 4.2012,
+      "vsNational": 0.3692,
       "vsNationalPct": 9.6,
       "rank": 44
     },
     {
       "code": "RI",
       "name": "Rhode Island",
-      "price": 3.8383,
-      "vsNational": -0.0156,
-      "vsNationalPct": -0.4,
+      "price": 3.8142,
+      "vsNational": -0.0178,
+      "vsNationalPct": -0.5,
       "rank": 30
     },
     {
       "code": "SC",
       "name": "South Carolina",
-      "price": 3.3582,
-      "vsNational": -0.4957,
-      "vsNationalPct": -12.9,
+      "price": 3.3462,
+      "vsNational": -0.4858,
+      "vsNationalPct": -12.7,
       "rank": 6
     },
     {
       "code": "SD",
       "name": "South Dakota",
-      "price": 3.6797,
-      "vsNational": -0.1742,
-      "vsNationalPct": -4.5,
-      "rank": 22
+      "price": 3.6761,
+      "vsNational": -0.1559,
+      "vsNationalPct": -4.1,
+      "rank": 24
     },
     {
       "code": "TN",
       "name": "Tennessee",
-      "price": 3.4299,
-      "vsNational": -0.424,
-      "vsNationalPct": -11,
-      "rank": 8
+      "price": 3.4079,
+      "vsNational": -0.4241,
+      "vsNationalPct": -11.1,
+      "rank": 9
     },
     {
       "code": "TX",
       "name": "Texas",
-      "price": 3.2783,
-      "vsNational": -0.5756,
-      "vsNationalPct": -14.9,
+      "price": 3.2518,
+      "vsNational": -0.5802,
+      "vsNationalPct": -15.1,
       "rank": 2
     },
     {
       "code": "UT",
       "name": "Utah",
-      "price": 4.0665,
-      "vsNational": 0.2126,
-      "vsNationalPct": 5.5,
+      "price": 4.0303,
+      "vsNational": 0.1983,
+      "vsNationalPct": 5.2,
       "rank": 39
     },
     {
       "code": "VT",
       "name": "Vermont",
-      "price": 4.0899,
-      "vsNational": 0.236,
-      "vsNationalPct": 6.1,
+      "price": 4.0805,
+      "vsNational": 0.2485,
+      "vsNationalPct": 6.5,
       "rank": 41
     },
     {
       "code": "VA",
       "name": "Virginia",
-      "price": 3.7071,
-      "vsNational": -0.1468,
-      "vsNationalPct": -3.8,
-      "rank": 26
+      "price": 3.6834,
+      "vsNational": -0.1486,
+      "vsNationalPct": -3.9,
+      "rank": 25
     },
     {
       "code": "WA",
       "name": "Washington",
-      "price": 4.8271,
-      "vsNational": 0.9732,
-      "vsNationalPct": 25.3,
+      "price": 4.793,
+      "vsNational": 0.961,
+      "vsNationalPct": 25.1,
       "rank": 47
     },
     {
       "code": "WV",
       "name": "West Virginia",
-      "price": 3.8826,
-      "vsNational": 0.0287,
-      "vsNationalPct": 0.7,
+      "price": 3.8624,
+      "vsNational": 0.0304,
+      "vsNationalPct": 0.8,
       "rank": 31
     },
     {
       "code": "WI",
       "name": "Wisconsin",
-      "price": 3.6313,
-      "vsNational": -0.2226,
-      "vsNationalPct": -5.8,
-      "rank": 20
+      "price": 3.5883,
+      "vsNational": -0.2437,
+      "vsNationalPct": -6.4,
+      "rank": 17
     },
     {
       "code": "WY",
       "name": "Wyoming",
-      "price": 3.8968,
-      "vsNational": 0.0429,
-      "vsNationalPct": 1.1,
+      "price": 3.8703,
+      "vsNational": 0.0383,
+      "vsNationalPct": 1,
       "rank": 32
     }
   ]
